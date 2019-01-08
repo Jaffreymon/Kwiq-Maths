@@ -2,7 +2,6 @@
 using UnityEngine;
 using TMPro;
 
-[RequireComponent(typeof(DisplayBehaviour))]
 public class ChoiceBehaviour : MonoBehaviour {
 
     GameBehaviour gameBehaviour;
