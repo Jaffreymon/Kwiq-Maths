@@ -11,8 +11,6 @@ public class ChoiceManager : MonoBehaviour {
     [SerializeField]
     Button[] choices;
     [SerializeField]
-    MathOperations op;
-    [SerializeField]
     GameBehaviour gameBehaviour;
 
     // Range an incorrect answer can deviate from the correct value
@@ -21,14 +19,14 @@ public class ChoiceManager : MonoBehaviour {
     // Generates math expression to be solved
     public void createChoices()
     {
-        op.generateExpression();
+        gameBehaviour.getMaths().generateExpression();
     }
 
     // Generates incorrect answers; displays possible answer choices when an expression is generated
 	public void setChoices()
     {
         int correctIdx = Random.Range(0,choices.Length-1);  // Chooses which choice box will contain correct answer
-        float result = op.getResult();                      // Gets the correct answer to current expression
+        float result = gameBehaviour.getMaths().getResult();                      // Gets the correct answer to current expression
         string correctAns = string.Format("{0}", result);   // Sets correct answer to a choice box
 
         string incorrectAns;    // Declares incorrect value string
@@ -80,7 +78,7 @@ public class ChoiceManager : MonoBehaviour {
     // Appropriately increments user score
     public void compareAnswer(TextMeshProUGUI userAns)
     {
-        if(userAns.text.CompareTo(op.getResult().ToString()) == 0)
+        if(userAns.text.CompareTo(gameBehaviour.getMaths().getResult().ToString()) == 0)
         {
             userAns.color = Color.green;
             gameBehaviour.addScore();

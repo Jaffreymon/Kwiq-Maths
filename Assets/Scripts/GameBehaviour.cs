@@ -14,9 +14,18 @@ public class GameBehaviour : MonoBehaviour {
     GameObject startBtn;
     [SerializeField]
     GameObject scoreText;
+    MathOperations op;
 
     // Tracks total correct choices
     static int totalScore = 0;
+
+
+    // Initialize at the start
+    private void Start()
+    {
+        op = GetComponent<MathOperations>();
+    }
+
 
     // Gets the title/mathematical expressions UI
     public DisplayBehaviour getDisplay()
@@ -65,5 +74,11 @@ public class GameBehaviour : MonoBehaviour {
     {
         display.GenerateExpression();
         choiceMngr.setChoices();
+    }
+
+    // Generates a mathematical expression
+    public MathOperations getMaths()
+    {
+        return op;
     }
 }
