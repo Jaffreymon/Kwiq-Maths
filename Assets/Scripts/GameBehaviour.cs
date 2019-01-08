@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 // Class to handle gameplay flow
@@ -14,11 +15,21 @@ public class GameBehaviour : MonoBehaviour {
     GameObject startBtn;
     [SerializeField]
     GameObject scoreText;
+    [SerializeField]
+    GameObject strikeText;
+    [SerializeField]
+    Image[] strikeImgs;
+    [SerializeField]
+    GameObject gameOverScreen;
     MathOperations op;
 
     // Tracks total correct choices
     static int totalScore = 0;
 
+    // Tracks total mistakes
+    static int totalMistakes = 0;
+    // Total mistakes tolerated
+    const int MAX_MISTAKES = 3;
 
     // Initialize at the start
     private void Start()
@@ -45,6 +56,7 @@ public class GameBehaviour : MonoBehaviour {
         toggleGameObject(choiceMngr.gameObject);    // Reveal answer choice boxes
         toggleGameObject(startBtn);                 // Hide start button
         toggleGameObject(scoreText);                // Reveal score UI
+        toggleGameObject(strikeText);               // Reveal score UI
         setScore();     // Initializes score
         startRound();   // Initializes first math expression
     }
@@ -63,7 +75,7 @@ public class GameBehaviour : MonoBehaviour {
     }
 
     // Toggles a game object's active status
-    private void toggleGameObject(GameObject go)
+    private static void toggleGameObject(GameObject go)
     {
         go.SetActive(!go.activeSelf);
     }
@@ -80,5 +92,20 @@ public class GameBehaviour : MonoBehaviour {
     public MathOperations getMaths()
     {
         return op;
+    }
+
+    public void recordMistake()
+    {
+        strikeImgs[totalMistakes++].gameObject.SetActive(true);
+    }
+
+    public bool isGameAlive()
+    {
+        return totalMistakes < MAX_MISTAKES;
+    }
+
+    public void gameOver()
+    {
+        toggleGameObject(gameOverScreen);
     }
 }

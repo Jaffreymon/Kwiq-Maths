@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -22,7 +23,7 @@ public class ChoiceManager : MonoBehaviour {
         gameBehaviour.getMaths().generateExpression();
     }
 
-    // Generates incorrect answers; displays possible answer choices when an expression is generated
+    // Generates answers choices; displays possible answer choices when an expression is generated
 	public void setChoices()
     {
         int correctIdx = Random.Range(0,choices.Length-1);  // Chooses which choice box will contain correct answer
@@ -35,7 +36,9 @@ public class ChoiceManager : MonoBehaviour {
         // Loop through all button choices
         for (int idx = 0; idx < choices.Length; idx++)
         {
+            // Resets color of answer choice boxes
             choices[idx].GetComponentInChildren<TextMeshProUGUI>().color = Color.black;
+
             // Give incorrect choice boxes an incorrect value
             if (idx != correctIdx)
             {
@@ -76,6 +79,7 @@ public class ChoiceManager : MonoBehaviour {
     // Takes a UI element and compares its text value to an expression's answer
     // Updates the UI element color
     // Appropriately increments user score
+    // Starts next round when possible
     public void compareAnswer(TextMeshProUGUI userAns)
     {
         if(userAns.text.CompareTo(gameBehaviour.getMaths().getResult().ToString()) == 0)
@@ -86,6 +90,32 @@ public class ChoiceManager : MonoBehaviour {
         else
         {
             userAns.color = Color.red;
+            gameBehaviour.recordMistake();
         }
+
+        if (!gameBehaviour.isGameAlive())
+        {
+            setButtons(false);
+            gameBehaviour.gameOver();
+        }
+        else
+        {
+            StartCoroutine(PrepareNextRound());
+        }
+    }
+
+    // Toggles button event listeners
+    private  void setButtons(bool status)
+    {
+        foreach(Button choiceBtn in choices)
+        {
+            choiceBtn.interactable = status;
+        }
+    }
+
+    IEnumerator PrepareNextRound()
+    {
+        yield return new WaitForSecondsRealtime(1);
+        gameBehaviour.startRound();
     }
 }
