@@ -62,6 +62,7 @@ public class GameBehaviour : MonoBehaviour {
     // Toggles appropriate game elements and starts the game
     public void initGame()
     {
+        totalScore = 50;
         toggleGameObject(choiceMngr.gameObject);    // Reveal answer choice boxes
         toggleGameObject(startBtn);                 // Hide start button
         toggleGameObject(scoreText);                // Reveal score UI
@@ -109,7 +110,8 @@ public class GameBehaviour : MonoBehaviour {
     // Generates a new math expression and updates UI
     // Updates answer choices UI
     public void startRound()
-    {
+    {        
+        op.increaseUpperBound(totalScore);
         display.GenerateExpression();
         choiceMngr.setChoices();
     }

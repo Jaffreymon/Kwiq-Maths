@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 
 // Class to handle all math operations
 
@@ -13,12 +13,32 @@ public class MathOperations : MonoBehaviour {
     private int totalOperations = 5;    // Total operations available
 
     // Difficulty variables
-    static int upperBound = 20;
+    static int upperBound;
+    const int initUpperBound = 15;
+    const int logBase = 5;  // Controls the difficult growth spike
 
     // Math variables
     static int operationToUse;
     static float leftExp, rightExp, result;
     static char sign;
+
+    // Runs when scene is created
+    private void Start()
+    {
+        upperBound = initUpperBound;
+    }
+
+    // Increases range of numbers used in expressions
+    public void increaseUpperBound(int increaseFactor)
+    {
+        // Assures log(0) does not occur
+        if (increaseFactor != 0)
+        {
+            int difficultyIncrease = (int)Mathf.Log(increaseFactor, logBase);  // growth rate log5(score)
+            difficultyIncrease *= difficultyIncrease; // Squares the difficulty increase
+            upperBound = initUpperBound + difficultyIncrease;   // Sets new upperbound to initUpperBound + difficultyIncrease
+        }
+    }
 
     // Creates a random binary operation expression; objects to operate on are integers in the range [1, upperBound]
     public string generateExpression()
