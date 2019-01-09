@@ -15,7 +15,7 @@ public class ChoiceManager : MonoBehaviour {
     GameBehaviour gameBehaviour;
 
     // Range an incorrect answer can deviate from the correct value
-    int resultVariance = 5;
+    int resultVariance = 4;
 
     // Generates math expression to be solved
     public void createChoices()
@@ -87,6 +87,7 @@ public class ChoiceManager : MonoBehaviour {
         {
             userAns.color = Color.green;
             gameBehaviour.addScore();
+            gameBehaviour.setHighscore();
         }
         else
         {

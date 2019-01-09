@@ -5,18 +5,18 @@
 public class MathOperations : MonoBehaviour {
 
     // Math operations to use
-	private const short ADD = 0;
-	private const short SUB = 1;
-	private const short MUL = 2;
-	private const short DIV = 3;
-    private const short MOD = 4;
+	private const int ADD = 0;
+	private const int SUB = 1;
+	private const int MUL = 2;
+	private const int DIV = 3;
+    private const int MOD = 4;
     private int totalOperations = 5;    // Total operations available
 
     // Difficulty variables
     static int upperBound = 20;
 
     // Math variables
-    static short operationToUse;
+    static int operationToUse;
     static float leftExp, rightExp, result;
     static char sign;
 
@@ -24,7 +24,7 @@ public class MathOperations : MonoBehaviour {
     public string generateExpression()
     {
         // Generate math operation
-        operationToUse = (short) Random.Range(0, totalOperations-1);
+        operationToUse = Random.Range(0, totalOperations);
 
         // Generate left and right numbers
         leftExp = Random.Range(1, upperBound);

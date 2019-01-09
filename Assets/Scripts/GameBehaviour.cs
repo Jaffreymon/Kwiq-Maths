@@ -22,12 +22,16 @@ public class GameBehaviour : MonoBehaviour {
     [SerializeField]
     GameObject strikeText;
     [SerializeField]
-    Image[] strikeImgs;
+    GameObject highscoreText;
+    [SerializeField]
+    GameObject[] strikeImgs;
     [SerializeField]
     GameObject gameOverScreen;
 
     // Tracks total correct choices
     static int totalScore = 0;
+    // Tracks high score
+    static int highScore;
 
     // Tracks total mistakes
     static int totalMistakes = 0;
@@ -38,6 +42,9 @@ public class GameBehaviour : MonoBehaviour {
     private void Start()
     {
         op = GetComponent<MathOperations>();
+        highScore = PlayerPrefs.GetInt("highscore", 0); // Gets the highscore to display on start screen
+
+        displayHighscore(); // Initializes highscore
     }
 
     // Gets the title/mathematical expressions UI
@@ -59,21 +66,38 @@ public class GameBehaviour : MonoBehaviour {
         toggleGameObject(startBtn);                 // Hide start button
         toggleGameObject(scoreText);                // Reveal score UI
         toggleGameObject(strikeText);               // Reveal score UI
-        setScore();     // Initializes score
-        startRound();   // Initializes first math expression
+        displayScore();         // Initializes score
+        startRound();           // Initializes first math expression
     }
 
     // Increments score and updates UI
     public void addScore()
     {
         totalScore++;
-        setScore();
+        displayScore();
     }
 
     // Updates score UI 
-    public void setScore()
+    public void displayScore()
     {
         scoreText.GetComponent<TextMeshProUGUI>().text = string.Format("Score: {0}", totalScore);
+    }
+
+    // Updates highscore UI
+    public void displayHighscore()
+    {
+        highscoreText.GetComponent<TextMeshProUGUI>().text = string.Format("High Score: {0}", highScore);
+    }
+
+    // Updates highscore data if current score is higher
+    public void setHighscore()
+    {
+        if (totalScore > highScore)
+        {
+            highScore = totalScore;
+            PlayerPrefs.SetInt("highscore", highScore);
+            displayHighscore(); // Display new highscore if old highscore broken
+        }
     }
 
     // Toggles a game object's active status
@@ -120,5 +144,12 @@ public class GameBehaviour : MonoBehaviour {
         totalMistakes = 0;
         totalScore = 0;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // Deletes highscore of current scene
+    // TODO Delete when not testing
+    private void OnApplicationQuit()
+    {
+        //PlayerPrefs.DeleteKey("highscore");
     }
 }
