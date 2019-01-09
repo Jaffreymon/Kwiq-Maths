@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 // Class to handle gameplay flow
 
 public class GameBehaviour : MonoBehaviour {
 
-    // UI elements in game
+    // Game behaviours
     [SerializeField]
     DisplayBehaviour display;
     [SerializeField]
     ChoiceManager choiceMngr;
+    MathOperations op;
+
+    // UI elements in game
     [SerializeField]
     GameObject startBtn;
     [SerializeField]
@@ -21,7 +25,6 @@ public class GameBehaviour : MonoBehaviour {
     Image[] strikeImgs;
     [SerializeField]
     GameObject gameOverScreen;
-    MathOperations op;
 
     // Tracks total correct choices
     static int totalScore = 0;
@@ -36,7 +39,6 @@ public class GameBehaviour : MonoBehaviour {
     {
         op = GetComponent<MathOperations>();
     }
-
 
     // Gets the title/mathematical expressions UI
     public DisplayBehaviour getDisplay()
@@ -94,18 +96,27 @@ public class GameBehaviour : MonoBehaviour {
         return op;
     }
 
+    // Increments the total incorrect answers made
     public void recordMistake()
     {
         strikeImgs[totalMistakes++].gameObject.SetActive(true);
     }
 
+    // Checks if the total mistakes meets the max tolerated
     public bool isGameAlive()
     {
         return totalMistakes < MAX_MISTAKES;
     }
 
+    // Enables the gameover screen over game UI
     public void gameOver()
     {
         toggleGameObject(gameOverScreen);
+    }
+
+    // Reloads the game's scene
+    public void resetScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
