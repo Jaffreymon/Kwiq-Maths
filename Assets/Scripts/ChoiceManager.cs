@@ -81,6 +81,8 @@ public class ChoiceManager : MonoBehaviour {
     // Starts next round when possible
     public void compareAnswer(TextMeshProUGUI userAns)
     {
+        setButtons(false);
+
         if(float.Parse(userAns.text) == gameBehaviour.getMaths().getResult())
         {
             userAns.color = Color.green;
@@ -116,5 +118,6 @@ public class ChoiceManager : MonoBehaviour {
     {
         yield return new WaitForSecondsRealtime(1);
         gameBehaviour.startRound();
+        setButtons(true);
     }
 }
