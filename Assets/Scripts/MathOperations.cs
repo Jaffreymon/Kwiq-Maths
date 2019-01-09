@@ -9,10 +9,11 @@ public class MathOperations : MonoBehaviour {
 	private const short SUB = 1;
 	private const short MUL = 2;
 	private const short DIV = 3;
-    private int totalOperations = 4;    // Total operations available
+    private const short MOD = 4;
+    private int totalOperations = 5;    // Total operations available
 
     // Difficulty variables
-    static int upperBound = 15;
+    static int upperBound = 20;
 
     // Math variables
     static short operationToUse;
@@ -49,12 +50,17 @@ public class MathOperations : MonoBehaviour {
                 result = operateDiv(leftExp, rightExp);
                 sign = '/';
                 break;
+            case MOD:
+                result = operateMod(leftExp, rightExp);
+                sign = '%';
+                break;
             default:
                 throw new System.Exception("Undefined math operation generated");
         }
         #endregion
 
         //Debug.LogFormat("{0} {1} {2} = {3}", leftExp, sign, rightExp, result);
+        result = float.Parse(result.ToString("0.##"));    // Converts result to string of 2 decimal places to be truncated
         return string.Format("{0} {1} {2} =", leftExp, sign, rightExp); // Returns the mathematical expression to solve
     }
     

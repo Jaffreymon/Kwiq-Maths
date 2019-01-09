@@ -28,10 +28,9 @@ public class ChoiceManager : MonoBehaviour {
     {
         int correctIdx = Random.Range(0,choices.Length-1);  // Chooses which choice box will contain correct answer
         float result = gameBehaviour.getMaths().getResult();                      // Gets the correct answer to current expression
-        string correctAns = string.Format("{0}", result);   // Sets correct answer to a choice box
 
-        string incorrectAns;    // Declares incorrect value string
-        List<string> used = new List<string>(); // Declares a stash of used values
+        float incorrectAns;    // Declares incorrect value variable
+        List<float> used = new List<float>(); // Declares a stash of used values
 
         // Loop through all button choices
         for (int idx = 0; idx < choices.Length; idx++)
@@ -48,27 +47,27 @@ public class ChoiceManager : MonoBehaviour {
                 {
                     int randomDisplacement = Random.Range(1, resultVariance);    
                     randomDisplacement *= (Random.value > 0.5) ? -1 : 1;                // Randomly decides to subtract and add variance to correct answer
-                    incorrectAns = string.Format("{0}", result + randomDisplacement);   // Evaluate incorrect answer
+                    incorrectAns = randomDisplacement + result;
                 } while (containsString(used, incorrectAns));
                 #endregion
 
                 used.Add(incorrectAns);     // Saves the generated answer
-                choices[idx].GetComponentInChildren<TextMeshProUGUI>().text = string.Format("{0}", incorrectAns);   // Sets incorrect answer to a choice box
+                choices[idx].GetComponentInChildren<TextMeshProUGUI>().text = incorrectAns.ToString("0.##");   // Sets incorrect answer to a choice box
             }
             // Set correct choice box the correct value
             else
             {
-                choices[correctIdx].GetComponentInChildren<TextMeshProUGUI>().text = correctAns;    // Sets correct answer to a choice box
+                choices[correctIdx].GetComponentInChildren<TextMeshProUGUI>().text = result.ToString("0.##");    // Sets correct answer to a choice box
             }
         }
     }
 
     // Determines if a List of strings contains a specified string
-    private bool containsString(List<string> list, string item)
+    private bool containsString(List<float> list, float item)
     {
-        foreach (string s in list)
+        foreach (float s in list)
         {
-            if (s.CompareTo(item) == 0)
+            if ( s == item)
             {
                 return true;
             }
@@ -82,7 +81,7 @@ public class ChoiceManager : MonoBehaviour {
     // Starts next round when possible
     public void compareAnswer(TextMeshProUGUI userAns)
     {
-        if(userAns.text.CompareTo(gameBehaviour.getMaths().getResult().ToString()) == 0)
+        if(float.Parse(userAns.text) == gameBehaviour.getMaths().getResult())
         {
             userAns.color = Color.green;
             gameBehaviour.addScore();

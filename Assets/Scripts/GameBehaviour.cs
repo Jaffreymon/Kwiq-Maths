@@ -117,6 +117,8 @@ public class GameBehaviour : MonoBehaviour {
     // Reloads the game's scene
     public void resetScene()
     {
+        totalMistakes = 0;
+        totalScore = 0;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
