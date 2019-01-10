@@ -14,29 +14,34 @@ public class GameBehaviour : MonoBehaviour {
     ChoiceManager choiceMngr;
     MathOperations op;
 
-    // UI elements in game
-    [SerializeField]
-    GameObject startBtn;
+
+    // UI elements in game to edit
     [SerializeField]
     GameObject scoreText;
-    [SerializeField]
-    GameObject strikeText;
     [SerializeField]
     GameObject highscoreText;
     [SerializeField]
     GameObject[] strikeImgs;
+
+
+    // GameHolder elements in game to toggle
     [SerializeField]
-    GameObject gameOverScreen;
+    GameObject startMenuHolder;
+    [SerializeField]
+    GameObject activeGameHolder;
+    [SerializeField]
+    GameObject gameOverHolder;
+
 
     // Tracks total correct choices
     static int totalScore = 0;
     // Tracks high score
     static int highScore;
-
     // Tracks total mistakes
     static int totalMistakes = 0;
     // Total mistakes tolerated
     const int MAX_MISTAKES = 3;
+
 
     // Initialize at the start
     private void Start()
@@ -62,11 +67,8 @@ public class GameBehaviour : MonoBehaviour {
     // Toggles appropriate game elements and starts the game
     public void initGame()
     {
-        totalScore = 50;
-        toggleGameObject(choiceMngr.gameObject);    // Reveal answer choice boxes
-        toggleGameObject(startBtn);                 // Hide start button
-        toggleGameObject(scoreText);                // Reveal score UI
-        toggleGameObject(strikeText);               // Reveal score UI
+        toggleGameObject(startMenuHolder);  // Disables start menu elements
+        toggleGameObject(activeGameHolder); // Enables active game elements
         displayScore();         // Initializes score
         startRound();           // Initializes first math expression
     }
@@ -137,7 +139,7 @@ public class GameBehaviour : MonoBehaviour {
     // Enables the gameover screen over game UI
     public void gameOver()
     {
-        toggleGameObject(gameOverScreen);
+        toggleGameObject(gameOverHolder);   // Enables gameover elements
     }
 
     // Reloads the game's scene
