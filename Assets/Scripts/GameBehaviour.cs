@@ -12,6 +12,8 @@ public class GameBehaviour : MonoBehaviour {
     DisplayBehaviour display;
     [SerializeField]
     ChoiceManager choiceMngr;
+    [SerializeField]
+    TimerBehaviour timer;
     MathOperations op;
 
 
@@ -37,6 +39,7 @@ public class GameBehaviour : MonoBehaviour {
     static int totalScore = 0;
     // Tracks high score
     static int highScore;
+
     // Tracks total mistakes
     static int totalMistakes = 0;
     // Total mistakes tolerated
@@ -52,6 +55,16 @@ public class GameBehaviour : MonoBehaviour {
         displayHighscore(); // Initializes highscore
     }
 
+    // Handles the timer
+    private void Update()
+    {
+        if (timer.getTimerStatus() && timer.getTimeLeft() <= 0f)
+        {
+            choiceMngr.compareAnswer(null);
+        }
+    }
+
+    #region Getters
     // Gets the title/mathematical expressions UI
     public DisplayBehaviour getDisplay()
     {
@@ -64,6 +77,13 @@ public class GameBehaviour : MonoBehaviour {
         return choiceMngr;
     }
 
+    // Generates a mathematical expression
+    public MathOperations getMaths()
+    {
+        return op;
+    }
+    #endregion
+
     // Toggles appropriate game elements and starts the game
     public void initGame()
     {
@@ -73,6 +93,13 @@ public class GameBehaviour : MonoBehaviour {
         startRound();           // Initializes first math expression
     }
 
+    // Toggles a game object's active status
+    private static void toggleGameObject(GameObject go)
+    {
+        go.SetActive(!go.activeSelf);
+    }
+
+    #region Score related functions
     // Increments score and updates UI
     public void addScore()
     {
@@ -103,11 +130,14 @@ public class GameBehaviour : MonoBehaviour {
         }
     }
 
-    // Toggles a game object's active status
-    private static void toggleGameObject(GameObject go)
+    // Increments the total incorrect answers made
+    public void recordMistake()
     {
-        go.SetActive(!go.activeSelf);
+        strikeImgs[totalMistakes++].gameObject.SetActive(true);
     }
+    #endregion
+
+    #region Gameplay Logistics
 
     // Generates a new math expression and updates UI
     // Updates answer choices UI
@@ -116,18 +146,7 @@ public class GameBehaviour : MonoBehaviour {
         op.increaseUpperBound(totalScore);
         display.GenerateExpression();
         choiceMngr.setChoices();
-    }
-
-    // Generates a mathematical expression
-    public MathOperations getMaths()
-    {
-        return op;
-    }
-
-    // Increments the total incorrect answers made
-    public void recordMistake()
-    {
-        strikeImgs[totalMistakes++].gameObject.SetActive(true);
+        timer.resetTimer();
     }
 
     // Checks if the total mistakes meets the max tolerated
@@ -150,10 +169,14 @@ public class GameBehaviour : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Deletes highscore of current scene
-    // TODO Delete when not testing
-    private void OnApplicationQuit()
+    #endregion
+
+    #region Slider functions
+
+    public void statusTimer(bool status)
     {
-        //PlayerPrefs.DeleteKey("highscore");
+        timer.setTimerStatus(status);
     }
+
+    #endregion
 }

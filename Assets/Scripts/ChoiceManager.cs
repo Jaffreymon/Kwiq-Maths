@@ -82,8 +82,14 @@ public class ChoiceManager : MonoBehaviour {
     public void compareAnswer(TextMeshProUGUI userAns)
     {
         setButtons(false);
+        gameBehaviour.statusTimer(false);
 
-        if(float.Parse(userAns.text) == gameBehaviour.getMaths().getResult())
+        if(userAns == null)
+        {
+            // userAns is null when no choice is made; mark as mistake
+            gameBehaviour.recordMistake();
+        }
+        else if(float.Parse(userAns.text) == gameBehaviour.getMaths().getResult())
         {
             userAns.color = Color.green;
             gameBehaviour.addScore();
@@ -107,7 +113,7 @@ public class ChoiceManager : MonoBehaviour {
     }
 
     // Toggles button event listeners
-    private  void setButtons(bool status)
+    private void setButtons(bool status)
     {
         foreach(Button choiceBtn in choices)
         {
