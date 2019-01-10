@@ -10,7 +10,7 @@ public class MathOperations : MonoBehaviour {
 	private const int MUL = 2;
 	private const int DIV = 3;
     private const int MOD = 4;
-    private int totalOperations = 5;    // Total operations available
+    private int totalOperations = 4;    // Total operations available
 
     // Difficulty variables
     static int upperBound;

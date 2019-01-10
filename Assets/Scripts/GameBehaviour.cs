@@ -17,6 +17,15 @@ public class GameBehaviour : MonoBehaviour {
     MathOperations op;
 
 
+    // Audio Components
+    [SerializeField]
+    AudioClip[] SFX;
+    // Index 0: Correct audio sound, Index 1: Wrong audio sound
+    const int CORRECT_DING = 0;
+    const int INCORRECT_DING = 1;
+    AudioSource source;
+
+
     // UI elements in game to edit
     [SerializeField]
     GameObject scoreText;
@@ -50,6 +59,7 @@ public class GameBehaviour : MonoBehaviour {
     private void Start()
     {
         op = GetComponent<MathOperations>();
+        source = GetComponent<AudioSource>();
         highScore = PlayerPrefs.GetInt("highscore", 0); // Gets the highscore to display on start screen
 
         displayHighscore(); // Initializes highscore
@@ -104,6 +114,8 @@ public class GameBehaviour : MonoBehaviour {
     public void addScore()
     {
         totalScore++;
+        source.clip = SFX[CORRECT_DING];
+        source.Play();
         displayScore();
     }
 
@@ -134,7 +146,10 @@ public class GameBehaviour : MonoBehaviour {
     public void recordMistake()
     {
         strikeImgs[totalMistakes++].gameObject.SetActive(true);
+        source.clip = SFX[INCORRECT_DING];
+        source.Play();
     }
+
     #endregion
 
     #region Gameplay Logistics
