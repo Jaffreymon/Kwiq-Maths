@@ -1,11 +1,18 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+
+using Firebase;
+using Firebase.Database;
+using Firebase.Unity.Editor;
 
 // Class to handle gameplay flow
 
 public class GameBehaviour : MonoBehaviour {
+
+    // Firebase Components
+    const string url = "https://kwiq-maths-388e4.firebaseio.com/";
+    DatabaseReference dbRef;
 
     // Game behaviours
     [SerializeField]
@@ -43,7 +50,6 @@ public class GameBehaviour : MonoBehaviour {
     [SerializeField]
     GameObject gameOverHolder;
 
-
     // Tracks total correct choices
     static int totalScore = 0;
     // Tracks high score
@@ -58,6 +64,12 @@ public class GameBehaviour : MonoBehaviour {
     // Initialize at the start
     private void Start()
     {
+        // Set up the Editor before calling into the realtime database.
+        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl(url);
+        dbRef = FirebaseDatabase.DefaultInstance.GetReference("Highscores");
+
+        PlayerPrefs.DeleteKey("highscore");
+
         op = GetComponent<MathOperations>();
         source = GetComponent<AudioSource>();
         highScore = PlayerPrefs.GetInt("highscore", 0); // Gets the highscore to display on start screen
@@ -139,6 +151,8 @@ public class GameBehaviour : MonoBehaviour {
             highScore = totalScore;
             PlayerPrefs.SetInt("highscore", highScore);
             displayHighscore(); // Display new highscore if old highscore broken
+
+            pushScoreToDB();
         }
     }
 
@@ -194,4 +208,45 @@ public class GameBehaviour : MonoBehaviour {
     }
 
     #endregion
+
+    #region Firebase functions
+    private void debugPrintList()
+    {
+        // Saves high score to firebase
+        dbRef.GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to fetch data");
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snap = task.Result;
+                
+            }
+        });
+    }
+
+    private void pushScoreToDB()
+    {
+        // Creates score entry in json format
+        LeaderboardEntry newEntry = new LeaderboardEntry("test", highScore);
+        string json = JsonUtility.ToJson(newEntry);
+
+        // Sets the value of the highscore
+        dbRef.Child(SystemInfo.deviceUniqueIdentifier).SetRawJsonValueAsync(json);
+    }
+    #endregion
+}
+
+class LeaderboardEntry
+{
+    public string username;
+    public int score;
+
+    public LeaderboardEntry(string _uid, int _score)
+    {
+        username = _uid;
+        score = _score;
+    }
 }
